@@ -1,0 +1,8 @@
+---
+# defaults file for ansible-role-tripleo-validations
+working_dir: /home/stack
+
+run_ooo_validations: True
+run_ooo_validations_script: run-ooo-validations.sh.j2
+
+

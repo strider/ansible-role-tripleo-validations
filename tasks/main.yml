@@ -1,0 +1,15 @@
+---
+# tasks file for ansible-role-tripleo-validations
+
+- when: run_ooo_validations|bool
+  block:
+    - name: Ensure tripleo-validations rpm requirements are installed
+      yum: name={{ item }} state=latest
+      with_items:
+        - openstack-tripleo-validations
+
+    - name: Create run-ooo-validations.sh
+      template:
+        src: "{{ run_ooo_validations_script }}"
+        dest: "{{ working_dir }}/run-ooo-validations.sh"
+        mode: 0755

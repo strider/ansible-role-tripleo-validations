@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+### --start_docs
+## Run individual validations
+## ==========================
+
+VALIDATION_NAME="${1:-}"
+
+if [ -z "$VALIDATION_NAME" ]; then
+    echo "You must specify the validation name."
+    exit 1
+fi
+
+ID=$(mistral execution-create -f value -c ID tripleo.validations.v1.run_validation "{\"validation_name\": \"$VALIDATION_NAME\"}")
+
+STATE=RUNNING
+while [ "$STATE" = RUNNING ]; do
+    sleep 1
+    STATE=$(mistral execution-get -f value -c State "$ID")
+done
+
+mistral execution-get-output "$ID" | jq .stdout -r
+
+## --stop_docs
